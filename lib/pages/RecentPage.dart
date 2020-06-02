@@ -3,11 +3,12 @@ import 'dart:convert';
 
 import 'package:dribbble/helpers/DataProvider.dart';
 import 'package:dribbble/helpers/FetchDataException.dart';
+import 'package:dribbble/widgets/PlaceHolder.dart';
 import 'package:dribbble/widgets/PostCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:async/async.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -40,25 +41,8 @@ class RecentPageState extends State<RecentPage>
 
   @override
   Widget build(BuildContext context) {
-
     super.build(context);
     needsRefresh = false;
-
-    final placeholder = Center(
-      child: Column(
-        children: <Widget>[
-          Image(
-            image: AssetImage('lib/assets/dribbble-logo.png'),
-            height: 40,
-          ),
-          Text(
-            "No Data to Show!",
-            style: TextStyle(color: Color(0xffea4c89)),
-          )
-        ],
-      ),
-    );
-
     return RefreshIndicator(
         key: _refreshIndicatorKey,
         child: FutureBuilder(
@@ -73,7 +57,7 @@ class RecentPageState extends State<RecentPage>
                   {
                     List<Widget> ret = [];
                     if (snapshot.hasError)
-                      return placeholder;
+                      return PlaceHolder("Some Error Occured!");
                     else if (!snapshot.hasData)
                       return Center(child: CircularProgressIndicator());
                     else if (snapshot.data.containsKey('postData') &&
@@ -88,20 +72,25 @@ class RecentPageState extends State<RecentPage>
                             ele.containsKey('author') &&
                             ele.containsKey('postLink') &&
                             ele.containsKey('likes')) {
-                              print(ele);
+                          // print(ele);
                           ret.add(Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            padding:
+                                const EdgeInsets.fromLTRB(2.0, 0.0, 2.0, 5.0),
                             child: PostCard(ele),
                           ));
                         }
                       }
+                    } else {
+                      print("xkdi");
+                      ret.add(PlaceHolder("No Posts from Following!"));
                     }
                     return ListView(
                       shrinkWrap: true,
                       children: ret,
                     );
                   }
-                  default: return placeholder; 
+                default:
+                  return PlaceHolder("Some Error Occured!");
               }
             }),
         onRefresh: _onRefresh);
@@ -126,19 +115,17 @@ class RecentPageState extends State<RecentPage>
       try {
         Response response = await dio.get(DataProvider.getAllPosts);
         temp = json.decode(response.toString());
-        print(temp);
+        // print(temp);
         ret['postData'] = temp;
         if (!ret['postData'].containsKey('success') ||
             !ret['postData'].containsKey('data') ||
-            !ret['postData']['success'])
-        {
+            !ret['postData']['success']) {
           FetchDataException();
-        }  
-        
+        }
       } catch (e) {
         ret['postData'] = {};
       }
-      print(ret);
+      // print(ret);
       return ret;
     });
   }

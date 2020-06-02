@@ -11,7 +11,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
-class RegistrationPage extends StatefulWidget{
+class RegistrationPage extends StatefulWidget {
   @override
   createState() => RegistrationPageState();
 }
@@ -28,13 +28,12 @@ class RegistrationPageState extends State<RegistrationPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
-  RegistrationPageState(){
+  RegistrationPageState() {
     registrationPressed = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    
     final emailTextField = Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       child: ClipRRect(
@@ -110,7 +109,7 @@ class RegistrationPageState extends State<RegistrationPage> {
           validator: (value) {
             if (value.isEmpty) {
               return 'Woah there, chief. Password can\'t be empty';
-            } else if(value != passwordValue.text.trim()) {
+            } else if (value != passwordValue.text.trim()) {
               return 'Passwords have to match!';
             } else {
               return null;
@@ -219,11 +218,10 @@ class RegistrationPageState extends State<RegistrationPage> {
     );
 
     final signinButton = ButtonTheme(
-      minWidth: 30.0,
-      child: FlatButton(
-        onPressed: () => Navigator.of(context).pop(),
-        child: Text("Already a member? Sign in"))
-    );
+        minWidth: 30.0,
+        child: FlatButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Already a member? Sign in")));
 
     return Scaffold(
         key: _scaffoldKey,
@@ -237,11 +235,14 @@ class RegistrationPageState extends State<RegistrationPage> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(top: 50),
-                        child: SvgPicture.asset(
-                          'lib/assets/dribbble-4.svg',
-                          height: 50,
-                          semanticsLabel: 'Dribbble logo',
-                          color: Color(0xffea4c89),
+                        child: Hero(
+                          tag: 'logo',
+                          child: SvgPicture.asset(
+                            'lib/assets/dribbble-4.svg',
+                            height: 50,
+                            semanticsLabel: 'Dribbble logo',
+                            color: Color(0xffea4c89),
+                          ),
                         ),
                       ),
                       nameTextField,
@@ -251,19 +252,20 @@ class RegistrationPageState extends State<RegistrationPage> {
                       confirmPasswordTextField,
                       registerButton,
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: signinButton
-                      )
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: signinButton)
                     ],
                   ))),
         ));
-
   }
 
   void showSnackBar(String error) {
     setState(() {
       registrationPressed = false;
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error), duration: Duration(seconds: 2),));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(error),
+        duration: Duration(seconds: 2),
+      ));
     });
   }
 
@@ -286,19 +288,20 @@ class RegistrationPageState extends State<RegistrationPage> {
           'userId': userIdValue.text.trim()
         });
         Map resp = json.decode(response.toString());
-        if(resp.containsKey('success') && response.data['success']) {
+        if (resp.containsKey('success') && response.data['success']) {
           //await userCache.write(response.data);
-          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Successfully Registered'), duration: Duration(seconds: 2),));
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text('Successfully Registered'),
+            duration: Duration(seconds: 2),
+          ));
           Navigator.of(context).pop();
-        }
-        else {
+        } else {
           showSnackBar("Some error occured");
         }
-      }
-      else showSnackBar("Some error occured");
+      } else
+        showSnackBar("Some error occured");
     } catch (e) {
       showSnackBar("Some error occured");
     }
   }
-
 }

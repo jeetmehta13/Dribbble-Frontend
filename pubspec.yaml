@@ -35,6 +35,8 @@ dev_dependencies:
   flutter_svg: ^0.17.4 
   path_provider: ^1.6.5
   image_picker: ^0.6.5
+  cached_network_image: ^2.2.0+1
+  flutter_cache_manager: ^1.2.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -51,6 +53,7 @@ flutter:
     - lib/assets/dribbble-4.svg
     - lib/assets/dribbble-logo.png
     - lib/assets/landscape_placeholder.png
+    - lib/assets/profile_placeholder.png
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 

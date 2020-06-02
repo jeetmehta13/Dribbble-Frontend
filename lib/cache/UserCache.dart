@@ -57,7 +57,7 @@ class UserCache {
   Future<void> delete() async {
     try {
       await this.ensureInitialization;
-      await storage.getString("UserCache");
+      await storage.remove("UserCache");
     } catch (e) {
       print("[ERROR] " + e.toString());
     }

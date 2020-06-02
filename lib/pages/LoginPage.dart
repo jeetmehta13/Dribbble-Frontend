@@ -15,8 +15,6 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   @override
   createState() => LoginPageState();
@@ -37,8 +35,7 @@ class LoginPageState extends State<LoginPage> {
     try {
       loginPressed = false;
       Logout().logout();
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   @override
@@ -144,12 +141,11 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
     final registerButton = ButtonTheme(
-      minWidth: 30.0,
-      child: FlatButton(
-        onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RegistrationPage())),
-        child: Text("Not a member? Sign up now"))
-    );
+        minWidth: 30.0,
+        child: FlatButton(
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => RegistrationPage())),
+            child: Text("Not a member? Sign up now")));
 
     return Scaffold(
         key: _scaffoldKey,
@@ -163,11 +159,14 @@ class LoginPageState extends State<LoginPage> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(top: 50),
-                        child: SvgPicture.asset(
-                          'lib/assets/dribbble-4.svg',
-                          height: 50,
-                          semanticsLabel: 'Dribbble logo',
-                          color: Color(0xffea4c89),
+                        child: Hero(
+                          tag: 'logo',
+                          child: SvgPicture.asset(
+                            'lib/assets/dribbble-4.svg',
+                            height: 50,
+                            semanticsLabel: 'Dribbble logo',
+                            color: Color(0xffea4c89),
+                          ),
                         ),
                       ),
                       emailTextField,
@@ -185,11 +184,17 @@ class LoginPageState extends State<LoginPage> {
   void showSnackBar(String error) {
     setState(() {
       loginPressed = false;
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error), duration: Duration(seconds: 2),));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(error),
+        duration: Duration(seconds: 2),
+      ));
     });
   }
 
   void loginAuth() async {
+    Map resp;
+    bool hasError = false;
+    String errMsg = "Unexpected error";
     try {
       final form = _formKey.currentState;
       if (form.validate()) {
@@ -205,20 +210,40 @@ class LoginPageState extends State<LoginPage> {
           'email': emailValue.text.trim(),
           'password': passwordValue.text.trim(),
         });
-        Map resp = json.decode(response.toString());
-        if(resp.containsKey('success') && response.data['success']) {
+        resp = json.decode(response.toString());
+        if (resp.containsKey('success') && resp['success'] && resp.containsKey('data')) {
           await userCache.write(response.data);
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage())
-          );
+              MaterialPageRoute(builder: (context) => HomePage()));
+        } else {
+          hasError = true;
+          errMsg = "Username/password combination incorrect";
         }
-        else {
-          showSnackBar("Username and Password do not match");
-        }
+      } else {
+        hasError = true;
+        errMsg = "Invalid Information";
       }
-      else showSnackBar("Invalid Format");
     } catch (e) {
-      showSnackBar("Unexpected Error");
+        try {
+          if(e.response.data.containsKey('success') && !e.response.data['success'] && e.response.data.containsKey('msg')){
+          if(e.response.data['msg'] == "Incorrect Password")
+          {
+            hasError = true;
+          errMsg = "Incorrect Password";
+          }
+          else if(e.response.data['msg'] == "Incorrect Email")
+          {
+            hasError = true;
+          errMsg = "Incorrect Email";
+          }
+        }
+        } catch (e) {
+          hasError = true;
+        errMsg = "Unexpected error";
+        }
+    }
+    if (hasError) {
+      showSnackBar(errMsg);
     }
   }
 }

@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:dribbble/helpers/DataProvider.dart';
 import 'package:dribbble/helpers/FetchDataException.dart';
-import 'package:dribbble/widgets/PostCard.dart';
+import 'package:dribbble/pages/UserPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:async/async.dart';
@@ -20,13 +21,16 @@ class PostDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.white,
-          leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.black,), onPressed: () => Navigator.of(context).pop())
-        ),
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.grey,
+                ),
+                onPressed: () => Navigator.of(context).pop())),
         body: ListView(
           children: <Widget>[
             Padding(
@@ -36,9 +40,20 @@ class PostDetails extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
-              child: Text(this.postDetails['author'].toString()),
+            GestureDetector(
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        UserPage(this.postDetails['author'].toString()),
+                  ),
+                )
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
+                child: Text(this.postDetails['author'].toString()),
+              ),
             ),
             ColorFiltered(
               colorFilter: ColorFilter.mode(
@@ -47,9 +62,23 @@ class PostDetails extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: FadeInImage.assetNetwork(
-                  placeholder: 'lib/assets/landscape_placeholder.png',
-                  image: postDetails['postLink'],
+                // child: FadeInImage.assetNetwork(
+                //   placeholder:
+                //       'lib/assets/landscape_placeholder.png',
+                //   image: postData['postLink'],
+                // ),
+                child: Center(
+                  child: Container(
+                    color: Colors.white,
+                    child: CachedNetworkImage(
+                      imageUrl: postDetails['postLink'],
+                      placeholder: (context, url) => Container(
+                          color: Colors.white,
+                          height: 200,
+                          child: Center(child: CircularProgressIndicator())),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -68,7 +97,9 @@ class PostDetails extends StatelessWidget {
                 ],
               ),
             ),
-            Divider(thickness: 1.0,),
+            Divider(
+              thickness: 1.0,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
               child: Text(this.postDetails['subtitle'].toString()),
