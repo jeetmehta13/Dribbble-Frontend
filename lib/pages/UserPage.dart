@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:dribbble/helpers/DataProvider.dart';
 import 'package:dribbble/helpers/FetchDataException.dart';
 import 'package:async/async.dart';
+import 'package:dribbble/pages/EditProfilePage.dart';
 import 'package:dribbble/pages/LoginPage.dart';
 import 'package:dribbble/widgets/PlaceHolder.dart';
 import 'package:dribbble/widgets/PostCard.dart';
@@ -33,7 +34,6 @@ class UserPageState extends State<UserPage>
 
   AsyncMemoizer _memoizer = AsyncMemoizer();
   bool needsRefresh = false;
-
 
   final scrollController = ScrollController();
 
@@ -101,7 +101,7 @@ class UserPageState extends State<UserPage>
                     if (snapshot.hasError)
                       return AlertDialog(
                         title: Text("Error"),
-                        content: Text("Some error occured"),
+                        content: Text("Some error occured1"),
                         actions: <Widget>[
                           FlatButton(
                               onPressed: () => Navigator.pop(context),
@@ -113,11 +113,8 @@ class UserPageState extends State<UserPage>
                         child: CircularProgressIndicator(),
                       );
                     else if (snapshot.data.toString().length > 0 &&
-                        snapshot.data.containsKey('postData') &&
-                        snapshot.data.containsKey('postData') &&
-                        snapshot.data['postData'].containsKey('success') &&
-                        snapshot.data['postData'].containsKey('data') &&
-                        snapshot.data['postData']['success']) {
+                        snapshot.data.containsKey('userData') &&
+                        snapshot.data['userData'] != null) {
                       ret.add(Container(
                         color: Colors.white,
                         child: Column(
@@ -328,7 +325,13 @@ class UserPageState extends State<UserPage>
                                               highlightedBorderColor:
                                                   Colors.black,
                                               color: Colors.white,
-                                              onPressed: () => {print('blah')},
+                                              onPressed: () => Navigator.of(
+                                                      context)
+                                                  .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditProfilePage(
+                                                              snapshot.data[
+                                                                  'userData']))),
                                               child: Text(
                                                 'Edit Profile',
                                                 style: TextStyle(
@@ -339,28 +342,22 @@ class UserPageState extends State<UserPage>
                           ],
                         ),
                       ));
-                      for (Map ele in snapshot.data['postData']['data']) {
-                        if (ele.containsKey('title') &&
-                            ele.containsKey('author') &&
-                            ele.containsKey('postLink') &&
-                            ele.containsKey('likes')) {
-                          // print(ele);
-                          ret.add(Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: PostCard(ele),
-                          ));
+                      if (snapshot.data.containsKey('postData') &&
+                          snapshot.data['postData'] != null &&
+                          snapshot.data['postData']['data'].length != 0) {
+                        for (Map ele in snapshot.data['postData']['data']) {
+                          if (ele.containsKey('title') &&
+                              ele.containsKey('author') &&
+                              ele.containsKey('postLink') &&
+                              ele.containsKey('likes')) {
+                            // print(ele);
+                            ret.add(Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: PostCard(ele),
+                            ));
+                          }
                         }
-                      }
-                      if(snapshot.data['postData']['data'].length == 0)
-                        // ret.add(Padding(
-                        //   padding: const EdgeInsets.only(top: 50.0),
-                        //   child: Center(child: Column(
-                        //     children: <Widget>[
-                        //       Icon(Icons.panorama_horizontal, size: 150.0,),
-                        //       Text("No Artworks Found", style: TextStyle(fontSize: 20.0),),
-                        //     ],
-                        //   ),),
-                        // ));
+                      } else
                         ret.add(PlaceHolder("No Artworks Found!"));
                       return ListView(
                         physics: AlwaysScrollableScrollPhysics(),
@@ -457,7 +454,7 @@ class UserPageState extends State<UserPage>
   }
 
   Future<Null> setFollowing() async {
-    follows = (follows == 1) ? 0:1;
+    follows = (follows == 1) ? 0 : 1;
     setState(() {});
     try {
       var dio = Dio();
@@ -466,19 +463,16 @@ class UserPageState extends State<UserPage>
       dio.interceptors.add(CookieManager(cj));
 
       Response response = await dio.post(DataProvider.setFollowing,
-        data: {'userId': userId, 'status': follows}
-      );
+          data: {'userId': userId, 'status': follows});
       print(response);
     } catch (e) {
-      
       showSnackBar("Some Error Occured!");
-
     }
   }
 
   void showSnackBar(String error) {
     setState(() {
-      follows = (follows == 1) ? 0:1;
+      follows = (follows == 1) ? 0 : 1;
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(error),
         duration: Duration(seconds: 2),
@@ -510,6 +504,4 @@ class UserPageState extends State<UserPage>
       },
     );
   }
-
-
 }

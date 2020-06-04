@@ -81,8 +81,8 @@ class RecentPageState extends State<RecentPage>
                         }
                       }
                     } else {
-                      print("xkdi");
-                      ret.add(PlaceHolder("No Posts from Following!"));
+                      // print("xkdi");
+                      ret.add(PlaceHolder("No Posts Recently!"));
                     }
                     return ListView(
                       shrinkWrap: true,

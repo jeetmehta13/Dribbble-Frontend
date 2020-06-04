@@ -82,7 +82,7 @@ class FollowingPageState extends State<FollowingPage>
                         }
                       }
                     } else {
-                      print("xkdi");
+                      // print("xkdi");
                       ret.add(PlaceHolder("No Posts from Following!"));
                     }
                     return ListView(
