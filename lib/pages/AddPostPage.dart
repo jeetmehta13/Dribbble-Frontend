@@ -4,15 +4,12 @@ import 'dart:convert';
 import 'package:dribbble/helpers/DataProvider.dart';
 import 'package:dribbble/helpers/FetchDataException.dart';
 import 'package:dribbble/pages/PostDetails.dart';
-import 'package:dribbble/widgets/PostCard.dart';
+
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:async/async.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -211,7 +208,7 @@ class AddPostState extends State<AddPost> {
         setState(() {
           btnPressed = true;
         });
-        print(btnPressed);
+        // print(btnPressed);
         var dio = Dio();
         Directory appDocDir = await getApplicationDocumentsDirectory();
         var cj = PersistCookieJar(dir: appDocDir.path, ignoreExpires: false);

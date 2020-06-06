@@ -331,7 +331,7 @@ class UserPageState extends State<UserPage>
                                                       builder: (context) =>
                                                           EditProfilePage(
                                                               snapshot.data[
-                                                                  'userData']))),
+                                                                  'userData'], _refreshData))),
                                               child: Text(
                                                 'Edit Profile',
                                                 style: TextStyle(
@@ -383,6 +383,14 @@ class UserPageState extends State<UserPage>
             }),
       ),
     );
+  }
+
+  _refreshData() {
+    setState(() {
+      // needsRefresh = true;
+      _memoizer = AsyncMemoizer();
+    });
+
   }
 
   _fetchData() async {

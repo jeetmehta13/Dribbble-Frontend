@@ -10,4 +10,5 @@ class DataProvider {
   static const String addPost = "http://15.206.100.208/addPost";
   static const String setFollowing = "http://15.206.100.208/setFollowing";
   static const String postDetails = "http://15.206.100.208/getContent";
+  static const String updateDetails = "http://15.206.100.208/updateDetails";
 }
