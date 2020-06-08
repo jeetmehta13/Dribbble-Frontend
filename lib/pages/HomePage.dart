@@ -31,167 +31,203 @@ class HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   backgroundColor: Color(0xffececea),
-    //   // appBar: AppBar(
-    //   //   leading: Hero(
-    //   //     tag: 'prof',
-    //   //     child: GestureDetector(
-    //   //       onTap: () {
-    //   //         Navigator.push(
-    //   //           context,
-    //   //           MaterialPageRoute(
-    //   //             builder: (context) => UserPage(username),
-    //   //           ),
-    //   //         );
-    //   //       },
-    //   //       child: Padding(
-    //   //         padding: const EdgeInsets.fromLTRB(12.0, 10.0, 4.0, 12.0),
-    //   //         child: ClipOval(
-
-    //   //           child: Image(
-    //   //             image: AssetImage('lib/assets/profile_placeholder.png'),
-    //   //             height: 5.0,
-    //   //           ),
-    //   //         ),
-    //   //       ),
-    //   //     ),
-    //   //   ),
-
-    //   //   centerTitle: true,
-    //   //   backgroundColor: Color(0xff262626),
-    //   //   bottom: TabBar(
-    //   //     // indicatorPadding: EdgeInsets.only(left: 15.0, right: 100.0),
-    //   //     tabs: [Tab(text: 'Following'), Tab(text: 'Recent')],
-    //   //     controller: controller,
-    //   //   ),
-    //   //   title: Padding(
-    //   //     padding: const EdgeInsets.fromLTRB(0.0, 8.0, 6.0, 8.0),
-    //   //     child: Row(
-    //   //       children: <Widget>[
-    //   //         SvgPicture.asset(
-    //   //           'lib/assets/dribbble-4.svg',
-    //   //           height: 20,
-    //   //           semanticsLabel: 'Dribbble logo',
-    //   //           color: Colors.white,
-    //   //         ),
-    //   //         Expanded(child: Container()),
-    //   //         IconButton(icon: Icon(Icons.add, color: Colors.white,), onPressed: null)
-    //   //       ],
-    //   //     ),
-    //   //   ),
-    //   // ),
-    //   body:  CustomScrollView(
+    return Scaffold(
+      backgroundColor: Color(0xffececea),
+      appBar: AppBar(
+        leading: Hero(
+          tag: 'prof',
+          child: GestureDetector(
+            onTap: () => Navigator.push(
+                context, SlideRightRoute(page: UserPage(username))),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12.0, 10.0, 4.0, 12.0),
+              child: ClipOval(
+                child: Image(
+                  image: AssetImage('lib/assets/profile_placeholder.png'),
+                  height: 5.0,
+                ),
+              ),
+            ),
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xff262626),
+        bottom: TabBar(
+          // indicatorPadding: EdgeInsets.only(left: 15.0, right: 100.0),
+          tabs: [Tab(text: 'Following'), Tab(text: 'Recent')],
+          controller: controller,
+        ),
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 6.0, 8.0),
+          child: Row(
+            children: <Widget>[
+              SvgPicture.asset(
+                'lib/assets/dribbble-4.svg',
+                height: 20,
+                semanticsLabel: 'Dribbble logo',
+                color: Colors.white,
+              ),
+              Expanded(child: Container()),
+              IconButton(
+                  icon: Hero(
+                    tag: 'add',
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => AddPost())))
+            ],
+          ),
+        ),
+      ),
+      body: TabBarView(
+        children: [FollowingPage(), RecentPage()],
+        controller: controller,
+      ),
+    );
+    //   body: CustomScrollView(
     //     slivers: <Widget>[
     //       SliverAppBar(
-    //         // title: Text("Silver AppBar With ToolBar"),
-    //         floating: true,
+    //         leading: Hero(
+    //             tag: 'prof',
+    //             child: GestureDetector(
+    //               onTap: () {
+    //                 Navigator.push(
+    //                   context,
+    //                   MaterialPageRoute(
+    //                     builder: (context) => UserPage(username),
+    //                   ),
+    //                 );
+    //                 Navigator.push(
+    //                     context, SlideRightRoute(page: UserPage(username)));
+    //               },
+    //               child: Padding(
+    //                 padding: const EdgeInsets.fromLTRB(12.0, 10.0, 4.0, 12.0),
+    //                 child: ClipOval(
+    //                   child: Image(
+    //                     image: AssetImage('lib/assets/profile_placeholder.png'),
+    //                     height: 5.0,
+    //                   ),
+    //                 ),
+    //               ),
+    //             )),
+    //         centerTitle: true,
     //         backgroundColor: Color(0xff262626),
-    //         // pinned: true,
-    //         // expandedHeight: 120.0,
-    //         // flexibleSpace: FlexibleSpaceBar(
-    //         //     centerTitle: true,
-    //         //     title: Text("Collapsing Toolbar",
-    //         //         style: TextStyle(
-    //         //           color: Colors.white,
-    //         //           fontSize: 16.0,
-    //         //         )),
-    //         //     // background: Image.network(
-    //         //     //   "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&h=350",
-    //         //     //   fit: BoxFit.cover,
-    //         //     // )
-    //         //     ),
+    //         title: Padding(
+    //           padding: const EdgeInsets.fromLTRB(0.0, 8.0, 6.0, 8.0),
+    //           child: Row(
+    //             children: <Widget>[
+    //               SvgPicture.asset(
+    //                 'lib/assets/dribbble-4.svg',
+    //                 height: 20,
+    //                 semanticsLabel: 'Dribbble logo',
+    //                 color: Colors.white,
+    //               ),
+    //               Expanded(child: Container()),
+    //               IconButton(
+    //                   icon: Hero(
+    //                     tag: 'add',
+    //                     child: Icon(
+    //                       Icons.add,
+    //                       color: Colors.white,
+    //                     ),
+    //                   ),
+    //                   onPressed: () => Navigator.of(context).push(
+    //                       MaterialPageRoute(builder: (context) => AddPost())))
+    //             ],
+    //           ),
+    //         ),
+    //         floating: true,
+    //         pinned: true,
+    //         snap: true,
     //         bottom: new TabBar(
-    //           tabs: [
-    //             Tab(text: 'Following'), Tab(text: 'Recent')
-    //           ],
     //           controller: controller,
+    //           tabs: [Tab(text: 'Following'), Tab(text: 'Recent')],
     //         ),
     //       ),
     //       SliverFillRemaining(
     //         child: TabBarView(
     //           controller: controller,
-    //           children: <Widget>[
-    //             FollowingPage(),
-    //             RecentPage()
-    //           ],
+    //           children: <Widget>[FollowingPage(), RecentPage()],
     //         ),
     //       ),
     //     ],
     //   ),
-
     // );
-    return Scaffold(
-      body: new NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            new SliverAppBar(
-              leading: Hero(
-                  tag: 'prof',
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => UserPage(username),
-                      //   ),
-                      // );
-                      Navigator.push(
-                          context, SlideRightRoute(page: UserPage(username)));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(12.0, 10.0, 4.0, 12.0),
-                      child: ClipOval(
-                        child: Image(
-                          image:
-                              AssetImage('lib/assets/profile_placeholder.png'),
-                          height: 5.0,
-                        ),
-                      ),
-                    ),
-                  )),
-              centerTitle: true,
-              backgroundColor: Color(0xff262626),
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 8.0, 6.0, 8.0),
-                child: Row(
-                  children: <Widget>[
-                    SvgPicture.asset(
-                      'lib/assets/dribbble-4.svg',
-                      height: 20,
-                      semanticsLabel: 'Dribbble logo',
-                      color: Colors.white,
-                    ),
-                    Expanded(child: Container()),
-                    IconButton(
-                        icon: Hero(
-                          tag: 'add',
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => AddPost())))
-                  ],
-                ),
-              ),
-              floating: true,
-              pinned: true,
-              snap: true,
-              bottom: new TabBar(
-                controller: controller,
-                tabs: [Tab(text: 'Following'), Tab(text: 'Recent')],
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          controller: controller,
-          children: <Widget>[FollowingPage(), RecentPage()],
-        ),
-      ),
-    );
+    //   return Scaffold(
+    //     body: new NestedScrollView(
+    //       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+    //         return <Widget>[
+    //           new SliverAppBar(
+    //             leading: Hero(
+    //                 tag: 'prof',
+    //                 child: GestureDetector(
+    //                   onTap: () {
+    //                     // Navigator.push(
+    //                     //   context,
+    //                     //   MaterialPageRoute(
+    //                     //     builder: (context) => UserPage(username),
+    //                     //   ),
+    //                     // );
+    //                     Navigator.push(
+    //                         context, SlideRightRoute(page: UserPage(username)));
+    //                   },
+    //                   child: Padding(
+    //                     padding: const EdgeInsets.fromLTRB(12.0, 10.0, 4.0, 12.0),
+    //                     child: ClipOval(
+    //                       child: Image(
+    //                         image:
+    //                             AssetImage('lib/assets/profile_placeholder.png'),
+    //                         height: 5.0,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                 )),
+    //             centerTitle: true,
+    //             backgroundColor: Color(0xff262626),
+    //             title: Padding(
+    //               padding: const EdgeInsets.fromLTRB(0.0, 8.0, 6.0, 8.0),
+    //               child: Row(
+    //                 children: <Widget>[
+    //                   SvgPicture.asset(
+    //                     'lib/assets/dribbble-4.svg',
+    //                     height: 20,
+    //                     semanticsLabel: 'Dribbble logo',
+    //                     color: Colors.white,
+    //                   ),
+    //                   Expanded(child: Container()),
+    //                   IconButton(
+    //                       icon: Hero(
+    //                         tag: 'add',
+    //                         child: Icon(
+    //                           Icons.add,
+    //                           color: Colors.white,
+    //                         ),
+    //                       ),
+    //                       onPressed: () => Navigator.of(context).push(
+    //                           MaterialPageRoute(builder: (context) => AddPost())))
+    //                 ],
+    //               ),
+    //             ),
+    //             floating: true,
+    //             pinned: true,
+    //             snap: true,
+    //             bottom: new TabBar(
+    //               controller: controller,
+    //               tabs: [Tab(text: 'Following'), Tab(text: 'Recent')],
+    //             ),
+    //           ),
+    //         ];
+    //       },
+    //       body: TabBarView(
+    //         controller: controller,
+    //         children: <Widget>[FollowingPage(), RecentPage()],
+    //       ),
+    //     ),
+    //   );
+    // }
   }
 
   Future<Null> getUserId() async {

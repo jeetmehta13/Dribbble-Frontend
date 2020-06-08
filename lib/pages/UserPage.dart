@@ -6,6 +6,7 @@ import 'package:dribbble/helpers/DataProvider.dart';
 import 'package:dribbble/helpers/FetchDataException.dart';
 import 'package:async/async.dart';
 import 'package:dribbble/pages/EditProfilePage.dart';
+import 'package:dribbble/pages/FollowPage.dart';
 import 'package:dribbble/pages/LoginPage.dart';
 import 'package:dribbble/widgets/PlaceHolder.dart';
 import 'package:dribbble/widgets/PostCard.dart';
@@ -28,6 +29,8 @@ class UserPageState extends State<UserPage>
     with AutomaticKeepAliveClientMixin<UserPage> {
   final String userId;
   int follows;
+  int followers;
+  int following;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -186,17 +189,23 @@ class UserPageState extends State<UserPage>
                                               padding:
                                                   const EdgeInsets.fromLTRB(
                                                       0.0, 10.0, 0.0, 10.0),
-                                              onPressed: () => {print('3')},
+                                              onPressed: () => Navigator.of(
+                                                      context)
+                                                  .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          FollowPage(
+                                                              snapshot.data[
+                                                                  'userData'],
+                                                              0)))
+                                                  .then((value) =>
+                                                      {_refreshData()}),
                                               child: RichText(
                                                   text: TextSpan(
                                                       style: TextStyle(
                                                           color: Colors.black),
                                                       children: <TextSpan>[
                                                         TextSpan(
-                                                            text: snapshot.data[
-                                                                        'userData']
-                                                                        [
-                                                                        'followers']
+                                                            text: followers
                                                                     .toString() +
                                                                 '\n',
                                                             // text: '145\n',
@@ -217,17 +226,23 @@ class UserPageState extends State<UserPage>
                                               padding:
                                                   const EdgeInsets.fromLTRB(
                                                       0.0, 10.0, 0.0, 10.0),
-                                              onPressed: () => {print('3')},
+                                              onPressed: () => Navigator.of(
+                                                      context)
+                                                  .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          FollowPage(
+                                                              snapshot.data[
+                                                                  'userData'],
+                                                              1)))
+                                                  .then((value) =>
+                                                      {_refreshData()}),
                                               child: RichText(
                                                   text: TextSpan(
                                                       style: TextStyle(
                                                           color: Colors.black),
                                                       children: <TextSpan>[
                                                         TextSpan(
-                                                            text: snapshot.data[
-                                                                        'userData']
-                                                                        [
-                                                                        'following']
+                                                            text: following
                                                                     .toString() +
                                                                 '\n',
                                                             style: TextStyle(
@@ -288,7 +303,13 @@ class UserPageState extends State<UserPage>
                                       // minWidth: 220,
                                       child: FlatButton(
                                           color: Color(0xffea4c89),
-                                          onPressed: () => setFollowing(),
+                                          onPressed: () => {
+                                                setFollowing(),
+                                                snapshot.data['userData']
+                                                    ['followers'] = followers,
+                                                snapshot.data['userData']
+                                                    ['following'] = following
+                                              },
                                           child: Text(
                                             'Follow',
                                             style:
@@ -303,11 +324,22 @@ class UserPageState extends State<UserPage>
                                         child: ButtonTheme(
                                           height: 30.0,
                                           // minWidth: 220,
-                                          child: FlatButton(
+                                          child: OutlineButton(
+                                              // shape: Border.all(width: 1.5, color: Colors.red),
+                                              highlightedBorderColor:
+                                                  Colors.black,
                                               color: Colors.white,
-                                              onPressed: () => setFollowing(),
+                                              onPressed: () => {
+                                                    setFollowing(),
+                                                    snapshot.data['userData']
+                                                            ['followers'] =
+                                                        followers,
+                                                    snapshot.data['userData']
+                                                            ['following'] =
+                                                        following
+                                                  },
                                               child: Text(
-                                                'Followed',
+                                                'Following',
                                                 style: TextStyle(
                                                     color: Colors.black),
                                               )),
@@ -331,7 +363,8 @@ class UserPageState extends State<UserPage>
                                                       builder: (context) =>
                                                           EditProfilePage(
                                                               snapshot.data[
-                                                                  'userData'], _refreshData))),
+                                                                  'userData'],
+                                                              _refreshData))),
                                               child: Text(
                                                 'Edit Profile',
                                                 style: TextStyle(
@@ -390,7 +423,6 @@ class UserPageState extends State<UserPage>
       // needsRefresh = true;
       _memoizer = AsyncMemoizer();
     });
-
   }
 
   _fetchData() async {
@@ -415,6 +447,8 @@ class UserPageState extends State<UserPage>
           // print("bk");
           ret['userData'] = resp['data'];
           follows = ret['userData']['follows'];
+          followers = ret['userData']['followers'];
+          following = ret['userData']['following'];
           setState(() {});
           response = await dio.get(DataProvider.getUserPosts + '/' + userId);
           resp = json.decode(response.toString());
@@ -462,8 +496,15 @@ class UserPageState extends State<UserPage>
   }
 
   Future<Null> setFollowing() async {
-    follows = (follows == 1) ? 0 : 1;
-    setState(() {});
+    setState(() {
+      if (follows == 1) {
+        follows = 0;
+        followers--;
+      } else {
+        follows = 1;
+        followers++;
+      }
+    });
     try {
       var dio = Dio();
       Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -480,7 +521,13 @@ class UserPageState extends State<UserPage>
 
   void showSnackBar(String error) {
     setState(() {
-      follows = (follows == 1) ? 0 : 1;
+      if (follows == 1) {
+        follows = 0;
+        followers--;
+      } else {
+        follows = 1;
+        followers++;
+      }
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(error),
         duration: Duration(seconds: 2),

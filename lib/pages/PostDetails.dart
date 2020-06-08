@@ -47,9 +47,21 @@ class PostDetails extends StatelessWidget {
                         UserPage(this.postDetails['author'].toString()),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
-                  child: Text(this.postDetails['author'].toString()),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 8.0, 0.0, 0.0),
+                      child: CircleAvatar(
+                        radius: 17.0,
+                        child:
+                            Image.asset('lib/assets/profile_placeholder.png'),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
+                      child: Text(this.postDetails['author'].toString()),
+                    ),
+                  ],
                 ),
               ),
               ColorFiltered(

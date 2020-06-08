@@ -23,7 +23,8 @@ class PostCard extends StatefulWidget {
   createState() => PostCardState(this.postData);
 }
 
-class PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin<PostCard>{
+class PostCardState extends State<PostCard>
+    with AutomaticKeepAliveClientMixin<PostCard> {
   final Map postData;
 
   PostCardState(this.postData);
@@ -62,18 +63,40 @@ class PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin<P
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
-                          child: Text(
-                            this.postData['title'].toString(),
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 0.0),
-                          child: Text(this.postData['author'].toString()),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                      10.0, 8.0, 0.0, 0.0),
+                              child: CircleAvatar(
+                                radius: 17.0,
+                                child: Image.asset(
+                                    'lib/assets/profile_placeholder.png'),
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10.0, 8.0, 10.0, 0.0),
+                                  child: Text(
+                                    this.postData['title'].toString(),
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10.0, 2.0, 10.0, 0.0),
+                                  child:
+                                      Text(this.postData['author'].toString(), style: TextStyle(fontSize: 10.0),),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         ColorFiltered(
                           colorFilter: ColorFilter.mode(
@@ -81,7 +104,7 @@ class PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin<P
                             BlendMode.darken,
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: const EdgeInsets.only(top: 8.0),
                             // child: FadeInImage.assetNetwork(
                             //   placeholder:
                             //       'lib/assets/landscape_placeholder.png',
@@ -95,7 +118,8 @@ class PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin<P
                                   placeholder: (context, url) => Container(
                                       color: Colors.white,
                                       height: 200,
-                                      child: Center(child: CircularProgressIndicator())),
+                                      child: Center(
+                                          child: CircularProgressIndicator())),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
                                 ),
@@ -104,21 +128,21 @@ class PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin<P
                           ),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  ),
                                 ),
-                              ),
-                              Text(postData['likes'].toString())
-                            ],
-                          ),
-                        )
+                                Text(postData['likes'].toString())
+                              ],
+                            ),
+                        ),
                       ],
                     ),
                   ),

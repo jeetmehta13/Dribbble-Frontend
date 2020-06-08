@@ -27,8 +27,6 @@ class FollowingPageState extends State<FollowingPage>
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
-  Map<String, Map> posts;
-
   bool needsRefresh = false;
 
   @override
@@ -36,7 +34,6 @@ class FollowingPageState extends State<FollowingPage>
 
   FollowingPageState() {
     needsRefresh = false;
-    posts = null;
   }
 
   @override
